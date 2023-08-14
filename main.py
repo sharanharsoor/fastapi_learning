@@ -3,11 +3,13 @@ from fastapi import FastAPI
 from router import route_blog_get
 from router import route_blog_post
 from router import user
+from router import article
 from db.database import engine
 from db import models
 
 app = FastAPI()
 app.include_router(user.router)
+app.include_router(article.router)
 app.include_router(route_blog_get.router)
 app.include_router(route_blog_post.router)
 
