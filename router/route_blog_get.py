@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response, status, Depends
 from enum import Enum
 from typing import Optional
+from . import route_blog_post  # for depends
 
 router = APIRouter(
     prefix='/blog',
@@ -48,3 +49,10 @@ def get_blog(id: int, response: Response):
   else :
     response.status_code = status.HTTP_200_OK
     return {'message': f'Blog with id {id}'}
+
+#-----------------------------------------------------------------------------#
+# usage of Depends
+@router.get('/dependi')
+def get_blogs_dep(pagein = 1, page_size_r = 1, req_parameter: dict = Depends(route_blog_post.required_functionality)):
+  return {'message': f'All {page_size_r} blogs on page {pagein}', 'req': req_parameter}
+#-----------------------------------------------------------------------------#

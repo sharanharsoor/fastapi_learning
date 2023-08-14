@@ -1,9 +1,13 @@
+from typing import Optional
 from fastapi import FastAPI
 from router import route_blog_get
 from router import route_blog_post
-
+from router import user
+from db.database import engine
+from db import models
 
 app = FastAPI()
+app.include_router(user.router)
 app.include_router(route_blog_get.router)
 app.include_router(route_blog_post.router)
 
@@ -12,6 +16,7 @@ app.include_router(route_blog_post.router)
 def index():
   return {'message': 'Hello world!'}
 
+models.Base.metadata.create_all(engine)
 
 '''
 @app.post("/write_to_file/")
