@@ -1,22 +1,38 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from router import route_blog_get
 from router import route_blog_post
 from router import user
 from router import article
 from db.database import engine
 from db import models
+from exceptions import StoryException
+from fastapi.responses import JSONResponse
+from router import product
 
 app = FastAPI()
 app.include_router(user.router)
 app.include_router(article.router)
 app.include_router(route_blog_get.router)
 app.include_router(route_blog_post.router)
-
+app.include_router(product.router)
 
 @app.get('/hello')
 def index():
   return {'message': 'Hello world!'}
+
+@app.exception_handler(StoryException)
+def story_exception_handler(request: Request, exc: StoryException):
+  return JSONResponse(
+    status_code=418,
+    content={'detail': exc.name}
+  )
+
+# below code is for example to handle any HTTPException, but this shouldn't
+# be used.
+# @app.exception_handler(HTTPException)
+# def custom_handler(request: Request, exc: StoryException):
+#   return PlainTextResponse(str(exc), status_code=400)
 
 models.Base.metadata.create_all(engine)
 
