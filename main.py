@@ -9,6 +9,7 @@ from db import models
 from exceptions import StoryException
 from fastapi.responses import JSONResponse
 from router import product
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 app.include_router(user.router)
@@ -35,6 +36,20 @@ def story_exception_handler(request: Request, exc: StoryException):
 #   return PlainTextResponse(str(exc), status_code=400)
 
 models.Base.metadata.create_all(engine)
+
+# CORS
+origins = [
+  'http://localhost:3000'
+]
+
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins = origins,
+  allow_credentials = True,
+  allow_methods = ["*"],
+  allow_headers = ['*']
+)
+
 
 '''
 @app.post("/write_to_file/")
