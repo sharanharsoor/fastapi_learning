@@ -4,6 +4,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from db.database import get_db
 from db import db_article
+from auth.oauth2 import oauth2_scheme
+from auth.oauth2 import get_current_user
+
 
 router = APIRouter(
   prefix='/article',
@@ -17,7 +20,8 @@ def create_article(request: ArticleBase, db: Session = Depends(get_db)):
 
 # Get specific article
 @router.get('/{id}') #, response_model=ArticleDisplay)
-def get_article(id: int, db: Session = Depends(get_db)):
+def get_article(id: int, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
   return {
-    'data': db_article.get_article(db, id)
+    'data': db_article.get_article(db, id),
+    'current_user': current_user
   }
