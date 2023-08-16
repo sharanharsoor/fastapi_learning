@@ -6,3 +6,4 @@ bcrypt
 python-docx
 python-multipart
 python-jose
+aiofiles
