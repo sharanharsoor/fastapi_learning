@@ -55,7 +55,7 @@ app.add_middleware(
   allow_headers = ['*']
 )
 
-app.mount('/files', StaticFiles(directory="files"), name='files')
+#app.mount('./files', StaticFiles(directory="files"), name='files')
 
 '''
 @app.post("/write_to_file/")

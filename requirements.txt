@@ -7,3 +7,6 @@ python-docx
 python-multipart
 python-jose
 aiofiles
+requests
+pytest
+pytest-httpx
