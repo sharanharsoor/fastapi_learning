@@ -13,9 +13,15 @@ from fastapi.responses import JSONResponse
 from router import product
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from templates import templates
+import time
+from client import html # import from client.py
+from starlette.responses import HTMLResponse
+from fastapi.websockets import WebSocket
 
 app = FastAPI()
 app.include_router(authentication.router)
+app.include_router(templates.router)
 app.include_router(file.router)
 app.include_router(user.router)
 app.include_router(article.router)
@@ -55,7 +61,40 @@ app.add_middleware(
   allow_headers = ['*']
 )
 
-#app.mount('./files', StaticFiles(directory="files"), name='files')
+# A middleware is a function that is processed with every request (before being
+# processed by any specific path operation) as well as with every
+# response before returning it.
+# This function takes each request that comes to your application.
+@app.middleware("http")
+async def add_middleware(request: Request, call_next):
+  start_time = time.time()
+  response = await call_next(request)
+  duration = time.time() - start_time
+  response.headers['duration_api'] = str(duration)
+  return response
+
+@app.get("/")
+async def get():
+  return HTMLResponse(html)
+
+clients = []
+
+@app.websocket("/chat")
+async def websocket_endpoint(websocket: WebSocket):
+  await websocket.accept()
+  clients.append(websocket)
+  while True:
+    data = await websocket.receive_text()
+    #print(data)
+    for client in clients:
+      await client.send_text(data)
+      #print(client)
+
+app.mount('/files', StaticFiles(directory="files"), name='files')
+app.mount('/templates/static',
+      StaticFiles(directory="templates/static"),
+      name="static"
+)
 
 '''
 @app.post("/write_to_file/")
