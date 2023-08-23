@@ -5,6 +5,7 @@ from router import route_blog_post
 from router import user
 from router import article
 from router import file
+from router import dependencies
 from auth import authentication
 from db.database import engine
 from db import models
@@ -18,8 +19,12 @@ import time
 from client import html # import from client.py
 from starlette.responses import HTMLResponse
 from fastapi.websockets import WebSocket
+from fastapi.param_functions import Depends
+from custom_log import log
 
+#app = FastAPI(dependencies=[Depends(log)]) # this will add depend to all API's.
 app = FastAPI()
+app.include_router(dependencies.router)
 app.include_router(authentication.router)
 app.include_router(templates.router)
 app.include_router(file.router)

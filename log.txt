@@ -1,1 +1,7 @@
 MyAPI: Template read for product with id 2
+MyApp: no message
+	http://127.0.0.1:8000/dependencies?separator=www&tag=MyApp&message=no%20message
+MyApp: no message
+	http://127.0.0.1:8000/dependencies?separator=www&tag=MyApp&message=no%20message
+MyApp: no message
+	http://127.0.0.1:8000/blog/all?page=1&tag=MyApp&message=no%20message
