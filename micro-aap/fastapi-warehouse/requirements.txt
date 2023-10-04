@@ -1,0 +1,14 @@
+fastapi==0.88
+redis-om
+uvicorn
+sqlalchemy
+passlib
+bcrypt
+python-docx
+python-multipart
+python-jose
+aiofiles
+requests
+pytest
+pytest-httpx
+jinja2
